@@ -12,7 +12,7 @@ div.nav-menu
 
 
 <script>
-import generalData from '../data/general.json'
+// import generalData from '../data/general.json'
 
 export default {
   components: {},
@@ -21,15 +21,8 @@ export default {
       menuList: []
     }
   },
-  methods: {
-    setMenuList () {
-      const data = generalData
-      const list = data.navMenu.menuList
-      this.menuList = list
-    }
-  },
+  methods: {},
   beforeMount () {
-    this.setMenuList()
   }
 }
 </script>

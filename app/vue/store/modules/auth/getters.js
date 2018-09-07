@@ -1,4 +1,4 @@
-import userData from '~/data/user.json'
+
 
 export default {
   isCurrentUser (state) {

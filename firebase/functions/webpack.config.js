@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
-
+const Dotenv = require('dotenv-webpack')
 
 const config = {
   entry: './src/index.js',
@@ -22,6 +22,9 @@ const config = {
       }
     ]
   },
+  plugins: [
+    new Dotenv()
+  ],
   resolve: {
     extensions: [ '.js' ]
   },

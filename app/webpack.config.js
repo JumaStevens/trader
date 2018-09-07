@@ -8,9 +8,9 @@ require('babel-polyfill')
 const config = {
   entry: ['babel-polyfill', './vue/main.js'],
   output: {
-    filename: 'bundle.js',
     path: path.resolve(__dirname, '../firebase/public'),
-    publicPath: './../firebase/public/'
+    publicPath: '/firebase/public/',
+    filename: 'bundle.js'
   },
   module: {
     rules: [
@@ -83,7 +83,7 @@ const config = {
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
-    contentBase: path.join(__dirname, 'firebase/public'),
+    contentBase: path.join(__dirname, '../firebase/public'),
   },
   performance: {
     hints: false

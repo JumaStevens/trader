@@ -2,32 +2,29 @@
 main(
   class='vue-app'
 )
+  h1 hello world 3
+  a(
+    @click='twitterSearch()'
+  ) Search Twitter!
 
-  navigation(
-    v-if='isCurrentUser'
-    class='vue-app__nav'
-  )
-
-  transition
-    Error404(
-      v-if='error.isError && error.type == "404"'
-      class='vue-app__error'
-    )
-    router-view(
-      v-if='isCurrentUser'
-      class='vue-app__view'
-    )
+  //- transition
+  //-   Error404(
+  //-     v-if='error.isError && error.type == "404"'
+  //-     class='vue-app__error'
+  //-   )
+  //-   router-view(
+  //-     class='vue-app__view'
+  //-   )
 </template>
 
 
 <script>
+import axios from 'axios'
 import Error404 from './views/Error404.vue'
-import Navigation from './components/Navigation.vue'
 
 export default {
   components: {
-    Error404,
-    Navigation
+    Error404
   },
   data () {
     return {}
@@ -38,6 +35,27 @@ export default {
     },
     isCurrentUser () {
       return this.$store.getters['auth/isCurrentUser']
+    }
+  },
+  methods: {
+    async twitterSearch () {
+      try {
+        const url = 'https://us-central1-trader-814b5.cloudfunctions.net/https-twitterSearch/'
+        const config = {
+          headers: {
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
+          },
+          data: {
+            hello: 'world'
+          }
+        }
+        const response = await axios.post(url, config)
+        console.log('response: ', response)
+      }
+      catch (e) {
+        console.error(e)
+      }
     }
   },
   beforeCreate () {
