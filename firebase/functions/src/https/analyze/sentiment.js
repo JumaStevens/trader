@@ -1,40 +1,30 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
-import { configTwitter } from './../../config/twitter'
 const express = require('express')
 const cors = require('cors')
-const Twitter = require('twitter')
+const Sentiment = require('sentiment')
 
 
 // create express instance
 const app = express()
 
-
 // automatically allow cross-origin requests
 app.use(cors({ origin: true }))
 
 
-// authenticate Twitter client
-const client = new Twitter(configTwitter)
+const sentiment = new Sentiment()
 
-
-// query Twitter for keywords
+// analyze the sentiment of text
 app.post('/', async (req, res) => {
   try {
-    console.log('SHOW ME THE MONEY')
+    console.log('WHAT DOES IT MEAN!')
     console.log('req: ', req)
     console.log('req body: ', req.body)
     console.log('req data: ', req.body.data)
-    
-    const searchConfig = {
-      q: 'btc',
-      lang: 'en',
-      result_type: 'recent',
-      count: 100,
-    }
-    const twitterRes = await client.get('search/tweets', searchConfig)
-    console.log('twitterRes: ', twitterRes)
-    res.status(200).send(twitterRes)
+
+    const text = req.body.data.text
+    const result = sentiment.analyze(text)
+    res.status(200).send(result)
   }
   catch (e) {
     console.error('catch error: ', e)
@@ -43,5 +33,5 @@ app.post('/', async (req, res) => {
 })
 
 
-// https://us-central1-trader-814b5.cloudfunctions.net/https-twitterSearch
+// https://us-central1-trader-814b5.cloudfunctions.net/https-analyzeSentiment
 export const listener = functions.https.onRequest(app)

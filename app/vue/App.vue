@@ -7,6 +7,18 @@ main(
     @click='twitterSearch()'
   ) Search Twitter!
 
+  form(
+    @submit.prevent='analyzeSentiment()'
+  )
+    input(
+      v-model='text'
+    )
+    input(
+      type='submit'
+      value='Submit'
+    )
+
+
   //- transition
   //-   Error404(
   //-     v-if='error.isError && error.type == "404"'
@@ -27,7 +39,9 @@ export default {
     Error404
   },
   data () {
-    return {}
+    return {
+      text: ''
+    }
   },
   computed: {
     error () {
@@ -51,7 +65,29 @@ export default {
           }
         }
         const response = await axios.post(url, config)
-        console.log('response: ', response)
+        console.log('twitterSearch response: ', response)
+      }
+      catch (e) {
+        console.error(e)
+      }
+    },
+
+
+    async analyzeSentiment () {
+      try {
+        if (!this.text) return
+        const url = 'https://us-central1-trader-814b5.cloudfunctions.net/https-analyzeSentiment/'
+        const config = {
+          headers: {
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
+          },
+          data: {
+            text: this.text
+          }
+        }
+        const response = await axios.post(url, config)
+        console.log('analyzeSentiment response: ', response)
       }
       catch (e) {
         console.error(e)
@@ -68,29 +104,33 @@ export default {
 <style lang='sass'>
 @import './assets/sass/main.sass'
 
-.vue-app
-  display: grid
-  grid-template-rows: calc(100vh - 48px) 48px
-  align-items: stretch
-  background: $white
-  +mq-l
-    grid-template-rows: 100vh
-    grid-template-columns: 64px 1fr
+form
 
-
-  &__error,
-  &__view
-    grid-row: 1 / 2
-    +mq-l
-      grid-row: 1 / 2
-      grid-column: 2 / 3
-
-
-  &__nav
-    grid-row: 2 / 3
-    +mq-l
-      grid-row: 1 / 2
-      grid-column: 1 / 2
+  & input
+    border: 1px solid black
+// .vue-app
+//   display: grid
+//   grid-template-rows: calc(100vh - 48px) 48px
+//   align-items: stretch
+//   background: $white
+//   +mq-l
+//     grid-template-rows: 100vh
+//     grid-template-columns: 64px 1fr
+//
+//
+//   &__error,
+//   &__view
+//     grid-row: 1 / 2
+//     +mq-l
+//       grid-row: 1 / 2
+//       grid-column: 2 / 3
+//
+//
+//   &__nav
+//     grid-row: 2 / 3
+//     +mq-l
+//       grid-row: 1 / 2
+//       grid-column: 1 / 2
 
 
 </style>
