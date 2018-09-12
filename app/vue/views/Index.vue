@@ -1,12 +1,17 @@
 <template lang='pug'>
 main.container
   h1 home
+  Twitter
 </template>
 
 
 <script>
+import Twitter from '~comp/twitter/Index.vue'
 
 export default {
+  components: {
+    Twitter
+  },
   data () {
     return {}
   }

@@ -2,8 +2,8 @@
 main.auth
 
   header(class='header')
-    h1(class='title') DASH
-    p(class='copy') Simply connect
+    h1(class='title') TRADAR
+    p(class='copy') Make better trading decisions.
 
 
   form(
@@ -36,7 +36,7 @@ main.auth
         class='auth__submit auth__signin'
         type='submit'
         value='Login'
-        @click='signInWithEmailAndPassword'
+        @click='signIn()'
       )
 
       //- forgot password
@@ -54,14 +54,14 @@ main.auth
       class='auth__submit auth__signup'
       type='submit'
       value='Signup'
-      @click='createUserWithEmailAndPassword'
+      @click='signUp()'
     )
 </template>
 
 
 <script>
-import { mapGetters } from 'vuex'
-import firebase from '~/firebase'
+import { mapGetters, mapActions } from 'vuex'
+
 
 export default {
   data () {
@@ -73,28 +73,37 @@ export default {
     }
   },
   methods: {
-    signInWithEmailAndPassword () {
+    async signIn () {
       try {
         this.$validator.validateAll()
         if (this.errors.any()) throw this.errors // $validator provided object
-        this.$store.dispatch('auth/signInWithEmailAndPassword', this.form)
+        await this.signInWithEmailAndPassword({ email: this.form.email, password: this.form.password })
         this.$router.replace({ name: 'index' })
       }
       catch (e) { console.error(e) }
     },
-    createUserWithEmailAndPassword () {
+
+
+    async signUp () {
       try {
         this.$validator.validateAll()
         if (this.errors.any()) throw this.errors // $validator provided object
-        this.$store.dispatch('auth/createUserWithEmailAndPassword', this.form)
+        await this.createUserWithEmailAndPassword({ email: this.form.email, password: this.form.password })
         this.$router.replace({ name: 'index' })
       }
       catch (e) { console.error(e) }
-    }
+    },
+
+
+    ...mapActions({
+      signInWithEmailAndPassword: 'auth/signInWithEmailAndPassword',
+      createUserWithEmailAndPassword: 'auth/createUserWithEmailAndPassword'
+    })
   },
   beforeRouteEnter (to, from, next) {
-    const currentUser = firebase.auth().currentUser
-    currentUser ? next({ name: 'index' }) : next()
+    // const authUser = this.$store.state.authUser
+    // authUser ? next({ name: 'index' }) : next()
+    next()
   }
 }
 </script>

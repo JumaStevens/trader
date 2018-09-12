@@ -1,30 +1,14 @@
-
-
 export default {
-  isCurrentUser (state) {
-    return state.currentUser !== null
+  isAuthUser (state) {
+    return state.authUser !== null
   },
 
 
-  getCurrentUser ({ currentUser }, getters) {
-    const user = {
-      uid: `${ currentUser.uid || '' }`,
-      displayName: `${ currentUser.displayName || '' }`,
-      profilePicture: `${ currentUser.photoURL || '' }`
+  getAuthUser ({ authUser }) {
+    return {
+      uid: `${ authUser.uid || '' }`,
+      displayName: `${ authUser.displayName || '' }`,
+      profilePicture: `${ authUser.photoURL || '' }`
     }
-
-    return user
-  },
-
-
-  getCurrentUserProfilePicture (state, getters) {
-    const profilePicture = getters.getCurrentUser.photoURL
-    return profilePicture ? profilePicture : userData.defaultProfilePicture
-  },
-
-
-  getCurrentUserDisplayName (state, getters) {
-    const displayName = state.currentUser.displayName
-    return displayName ? displayName : userData.defaultDisplayName
   }
 }

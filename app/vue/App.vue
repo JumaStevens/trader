@@ -2,40 +2,28 @@
 main(
   class='vue-app'
 )
-  h1 hello world 3
-  a(
-    @click='twitterSearch()'
-  ) Search Twitter!
-
-  form(
-    @submit.prevent='analyzeSentiment()'
+  Navigation(
+    class='vue-app__nav'
   )
-    input(
-      v-model='text'
-    )
-    input(
-      type='submit'
-      value='Submit'
-    )
 
-
-  //- transition
-  //-   Error404(
-  //-     v-if='error.isError && error.type == "404"'
-  //-     class='vue-app__error'
-  //-   )
-  //-   router-view(
-  //-     class='vue-app__view'
-  //-   )
+  transition
+    Error404(
+      v-if='error.isError && error.type == "404"'
+      class='vue-app__error'
+    )
+    router-view(
+      class='vue-app__view'
+    )
 </template>
 
 
 <script>
-import axios from 'axios'
 import Error404 from './views/Error404.vue'
+import Navigation from '~comp/navigation/Index.vue'
 
 export default {
   components: {
+    Navigation,
     Error404
   },
   data () {
@@ -52,27 +40,6 @@ export default {
     }
   },
   methods: {
-    async twitterSearch () {
-      try {
-        const url = 'https://us-central1-trader-814b5.cloudfunctions.net/https-twitterSearch/'
-        const config = {
-          headers: {
-            'Access-Control-Allow-Origin' : '*',
-            'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
-          },
-          data: {
-            hello: 'world'
-          }
-        }
-        const response = await axios.post(url, config)
-        console.log('twitterSearch response: ', response)
-      }
-      catch (e) {
-        console.error(e)
-      }
-    },
-
-
     async analyzeSentiment () {
       try {
         if (!this.text) return
@@ -104,10 +71,25 @@ export default {
 <style lang='sass'>
 @import './assets/sass/main.sass'
 
+.vue-app
+  width: 100vw
+  height: 100vh
+  display: grid
+  grid-template-rows: auto 1fr
+  +mq-m
+    grid-template-rows: unset
+    grid-template-columns: auto 1fr
+
+  &__nav
+
+  &__error,
+  &__view
+
+
 form
 
   & input
-    border: 1px solid black
+    // border: 1px solid black
 // .vue-app
 //   display: grid
 //   grid-template-rows: calc(100vh - 48px) 48px

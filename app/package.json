@@ -13,6 +13,7 @@
     "dotenv-webpack": "^1.5.5",
     "firebase": "^5.0.2",
     "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "vee-validate": "^2.0.9",
     "vue": "^2.5.16",
     "vue-lazyload": "^1.2.3",

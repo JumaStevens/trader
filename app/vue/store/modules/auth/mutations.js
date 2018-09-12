@@ -1,17 +1,14 @@
 import Vue from 'vue'
-import firebase from '~/firebase'
 
 export default {
-  setCurrentUser (state) {
-    const user = firebase.auth().currentUser
-    if (!user) return
-    state.currentUser = user.toJSON()
-    console.log('setCurrentUser: ', user)
+  SET_AUTH_USER (state, { authUser }) {
+    state.authUser = authUser.toJSON()
+    console.log('SET_AUTH_USER: ', authUser)
   },
 
 
-  clearCurrentUser (state) {
-    state.currentUser = null
-    console.log('clearCurrentUser')
+  DELETE_AUTH_USER (state) {
+    state.authUser = null
+    console.log('DELETE_AUTH_USER')
   }
 }

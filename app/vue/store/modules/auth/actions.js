@@ -4,21 +4,14 @@ const currentUser = () => firebase.auth().currentUser
 
 export default {
   watchAuthState ({ commit, dispatch }) {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        commit('setCurrentUser')
-        dispatch('presence/authPresence', {}, { root: true })
+    firebase.auth().onAuthStateChanged(authUser => {
+      if (authUser) {
+        commit('SET_AUTH_USER', { authUser })
+        // dispatch('presence/authPresence', {}, { root: true })
       } else {
-        commit('clearCurrentUser')
-        dispatch('signInAnonymously')
+        commit('DELETE_AUTH_USER')
       }
     })
-  },
-
-
-  async signInAnonymously () {
-    try { await firebase.auth().signInAnonymously() }
-    catch (e) { console.error(e) }
   },
 
 
@@ -78,7 +71,7 @@ export default {
   async deleteUserAccount ({ commit }, payload) {
     try {
       await currentUser().delete()
-      commit('clearCurrentUser')
+      commit('DELETE_AUTH_USER')
     }
     catch (e) { console.error(e) }
   },
