@@ -21,16 +21,18 @@ const client = new Twitter(configTwitter)
 // query Twitter for keywords
 app.post('/', async (req, res) => {
   try {
-    console.log('SHOW ME THE MONEY')
-    console.log('req: ', req)
     console.log('req body: ', req.body)
-    console.log('req data: ', req.body.data)
+    const { until, since_id } = req.body
 
+    // parameters documentation
+    // https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets.html
     const searchConfig = {
       q: 'btc',
       lang: 'en',
       result_type: 'recent',
       count: 100,
+      until,
+      since_id
     }
 
     const twitterRes = await client.get('search/tweets', searchConfig)

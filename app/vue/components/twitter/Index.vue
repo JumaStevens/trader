@@ -1,7 +1,6 @@
 <template lang='pug'>
 div
-  a(@click='fetchTweets()') Fetch Tweets
-
+  a(@click='initTweets()') Init Tweets
 </template>
 
 
@@ -18,13 +17,23 @@ export default {
   computed: {},
   methods: {
     ...mapActions({
-      fetchTweets: 'twitter/fetchTweets'
+      initTweets: 'twitter/initTweets',
+      watchTweetsMetadata: 'twitter/watchTweetsMetadata',
     })
+  },
+  mounted () {
+    this.watchTweetsMetadata()
   }
 }
 </script>
 
 
 <style lang='sass' scoped>
+
+a
+  display: inline-block
+  background: lightblue
+  padding: 8px 16px
+  margin: 0 8px
 
 </style>

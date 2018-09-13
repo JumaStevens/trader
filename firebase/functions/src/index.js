@@ -1,7 +1,9 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 
+
 // database
+import * as Database from './db'
 
 
 // https
@@ -10,10 +12,11 @@ import * as Https from './https'
 
 // initialize firebase admin
 admin.initializeApp()
+admin.firestore().settings({ timestampsInSnapshots: true })
 
 
 // export database
-
+export const database = Database
 
 
 // export https
