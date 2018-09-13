@@ -1,16 +1,26 @@
 import axios from 'axios'
 import moment from 'moment'
+import _ from 'lodash'
 import { twitterTimestamp } from '~/utils'
 import firebase, { database, firestore } from '~/firebase'
-firestore.settings({ timestampsInSnapshots: true })
 
 
 export default {
-  async initTweets ({ dispatch }) {
+  async initTweets ({ state, dispatch }) {
     try {
 
       // retrieve tweets metadata
-      const { end_time, end_time_unix, max_id } = await dispatch('fetchTweetsMetadata')
+      const metadata = state.tweetsMetadata
+      const { end_time, end_time_unix, max_id } = _.isEmpty(metadata) ? await dispatch('fetchTweetsMetadata') : metadata
+
+      // get today's date
+      const today = moment().format('YYYY-MM-DD')
+
+      // exit if last tweets retrieval was today
+      if (moment(end_time).format('YYYY-MM-DD') === today) {
+        console.log('tweets collection is all caught up!')
+        return
+      }
 
       // get date 7 days ago
       const lastWeek = moment().subtract(7, 'day')
@@ -20,41 +30,16 @@ export default {
       let since_id = 0
 
       // if last tweets fetch was within 7 days, retrieve since last fetch
-      if (end_time_unix <= lastWeek.unix()) {
-        until = moment(end_time).format('YYYY-MM-DD')
+      if (end_time_unix > lastWeek.unix()) {
+        until = moment(end_time).add(1, 'day').format('YYYY-MM-DD')
         since_id = max_id
       }
-
-      console.log('lastWeekUnix: ', lastWeek.unix())
-
-      console.log('until: ', until)
-      console.log('since_id: ', since_id)
-
 
       // retrieve tweets from Twitter
       const { search_metadata, statuses } = await dispatch('fetchTweets', { until, since_id })
 
       // write tweets to database
       await dispatch('writeTweets', { search_metadata, statuses })
-
-      // retrieve next batch of tweets
-      // await dispatch('fetchTweetsNext')
-
-      return
-    }
-    catch (e) {
-      console.error(e)
-    }
-  },
-
-
-  async fetchTweetsNext ({ dispatch }) {
-    try {
-      const now = moment.unit()
-      console.log('now: ', unix)
-
-      // fetch tweet data
-      // const snapshot = await firestore.collection('tweets').where('end_time_unix', '=>')
 
       return
     }
@@ -145,8 +130,12 @@ export default {
   },
 
 
-  watchTweetsMetadata ({ commit }) {
-    const success = (snapshot) => commit('SET_TWEETS_METADATA', { metadata: snapshot.data() })
+  watchTweetsMetadata ({ commit, dispatch }) {
+    const success = (snapshot) => {
+      commit('SET_TWEETS_METADATA', { metadata: snapshot.data() })
+      dispatch('initTweets')
+    }
+
     const error = (err) => console.error(err)
 
     const docRef = firestore.collection('tweetsMetadata').doc('metadata')
