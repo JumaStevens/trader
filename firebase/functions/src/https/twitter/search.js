@@ -21,7 +21,8 @@ const client = new Twitter(configTwitter)
 // query Twitter for keywords
 app.post('/', async (req, res) => {
   try {
-    console.log('req body: ', req.body)
+
+    // twitter parameters
     const { until, since_id } = req.body
 
     // parameters documentation
@@ -36,7 +37,6 @@ app.post('/', async (req, res) => {
     }
 
     const twitterRes = await client.get('search/tweets', searchConfig)
-    console.log('twitterRes: ', twitterRes)
     res.status(200).send(twitterRes)
   }
   catch (e) {
@@ -48,15 +48,3 @@ app.post('/', async (req, res) => {
 
 // https://us-central1-trader-814b5.cloudfunctions.net/https-twitterSearch
 export const listener = functions.https.onRequest(app)
-
-
-
-/*
-search api limit: 450 / 15minutes
-
-7days * 24hrs * 60mins = 10,080 minutes
-
-10,080mins / 60mins = 168 requests (aka 60minute increments of tweets equals 168 requests to the API)
-
-168requests * 100tweets = 16,800tweets (for a week period)
-*/

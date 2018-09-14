@@ -17,14 +17,18 @@ const sentiment = new Sentiment()
 // analyze the sentiment of text
 app.post('/', async (req, res) => {
   try {
-    console.log('WHAT DOES IT MEAN!')
-    console.log('req: ', req)
-    console.log('req body: ', req.body)
-    console.log('req data: ', req.body.data)
 
-    const text = req.body.data.text
-    const result = sentiment.analyze(text)
-    res.status(200).send(result)
+    // twitter statuses
+    const { statuses } = req.body
+
+    // get sentiment analysis of tweets
+    const results = statuses.map(status => {
+      const { created_at, created_at_unix, text } = status
+      const { score } = sentiment.analyze(text)
+      return { score, created_at, created_at_unix }
+    })
+
+    res.status(200).send(results)
   }
   catch (e) {
     console.error('catch error: ', e)

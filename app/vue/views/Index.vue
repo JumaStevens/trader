@@ -1,6 +1,5 @@
 <template lang='pug'>
 main.container
-  h1 home
   Twitter
 </template>
 

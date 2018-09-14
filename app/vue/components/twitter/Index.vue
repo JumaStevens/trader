@@ -1,28 +1,51 @@
 <template lang='pug'>
 div
-  a(@click='initTweets()') Init Tweets
+  line-chart(
+    :data='chartData'
+    class='chart'
+  )
+  area-chart(
+    :data='chartData2'
+    class='chart'
+  )
 </template>
 
 
 <script>
-import { mapActions } from 'vuex'
-
+import { mapGetters, mapActions } from 'vuex'
+import moment from 'moment'
 
 export default {
-  components: {},
   props: {},
   data () {
     return {}
   },
-  computed: {},
+  computed: {
+    chartData () {
+      // return this.twitterSentiment.map(sentiment => [sentiment.created_at_unix, sentiment.score ])
+      return this.twitterSentimentDaily.map(sentiment => [ sentiment.date, sentiment.averageScore ])
+    },
+
+    chartData2 () {
+      return this.twitterSentiment.map(sentiment => [sentiment.created_at_unix, sentiment.score ])
+      // return this.twitterSentimentDaily.map(sentiment => [ sentiment.date, sentiment.averageScore ])
+    },
+
+
+    ...mapGetters({
+      twitterSentiment: 'sentiment/twitterSentiment',
+      twitterSentimentDaily: 'sentiment/twitterSentimentDaily'
+    })
+  },
   methods: {
     ...mapActions({
-      initTweets: 'twitter/initTweets',
       watchTweetsMetadata: 'twitter/watchTweetsMetadata',
+      watchTwitterSentiment: 'sentiment/watchTwitterSentiment'
     })
   },
   mounted () {
     this.watchTweetsMetadata()
+    this.watchTwitterSentiment()
   }
 }
 </script>
@@ -30,10 +53,7 @@ export default {
 
 <style lang='sass' scoped>
 
-a
-  display: inline-block
-  background: lightblue
-  padding: 8px 16px
-  margin: 0 8px
-
+.chart
+  width: 80%
+  margin: $unit*5
 </style>

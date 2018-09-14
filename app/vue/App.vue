@@ -27,9 +27,7 @@ export default {
     Error404
   },
   data () {
-    return {
-      text: ''
-    }
+    return {}
   },
   computed: {
     error () {
@@ -39,28 +37,7 @@ export default {
       return this.$store.getters['auth/isCurrentUser']
     }
   },
-  methods: {
-    async analyzeSentiment () {
-      try {
-        if (!this.text) return
-        const url = 'https://us-central1-trader-814b5.cloudfunctions.net/https-analyzeSentiment/'
-        const config = {
-          headers: {
-            'Access-Control-Allow-Origin' : '*',
-            'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
-          },
-          data: {
-            text: this.text
-          }
-        }
-        const response = await axios.post(url, config)
-        console.log('analyzeSentiment response: ', response)
-      }
-      catch (e) {
-        console.error(e)
-      }
-    }
-  },
+  methods: {},
   beforeCreate () {
     this.$store.dispatch('auth/watchAuthState')
   }
@@ -84,35 +61,5 @@ export default {
 
   &__error,
   &__view
-
-
-form
-
-  & input
-    // border: 1px solid black
-// .vue-app
-//   display: grid
-//   grid-template-rows: calc(100vh - 48px) 48px
-//   align-items: stretch
-//   background: $white
-//   +mq-l
-//     grid-template-rows: 100vh
-//     grid-template-columns: 64px 1fr
-//
-//
-//   &__error,
-//   &__view
-//     grid-row: 1 / 2
-//     +mq-l
-//       grid-row: 1 / 2
-//       grid-column: 2 / 3
-//
-//
-//   &__nav
-//     grid-row: 2 / 3
-//     +mq-l
-//       grid-row: 1 / 2
-//       grid-column: 1 / 2
-
 
 </style>

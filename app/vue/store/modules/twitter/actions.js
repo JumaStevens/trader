@@ -6,7 +6,7 @@ import firebase, { database, firestore } from '~/firebase'
 
 
 export default {
-  async initTweets ({ state, dispatch }) {
+  async handleTweets ({ state, dispatch }) {
     try {
 
       // retrieve tweets metadata
@@ -17,8 +17,8 @@ export default {
       const today = moment().format('YYYY-MM-DD')
 
       // exit if last tweets retrieval was today
-      if (moment(end_time).format('YYYY-MM-DD') === today) {
-        console.log('tweets collection is all caught up!')
+      if (end_time && moment(end_time).format('YYYY-MM-DD') === today) {
+        console.log('Tweets collection is all caught up!')
         return
       }
 
@@ -98,6 +98,7 @@ export default {
           id: status.id,
           text: status.text,
           created_at: twitterTimestamp(status.created_at).format(),
+          created_at_unix: twitterTimestamp(status.created_at).unix(),
           lang: status.lang
         }
       })
@@ -133,7 +134,7 @@ export default {
   watchTweetsMetadata ({ commit, dispatch }) {
     const success = (snapshot) => {
       commit('SET_TWEETS_METADATA', { metadata: snapshot.data() })
-      dispatch('initTweets')
+      dispatch('handleTweets')
     }
 
     const error = (err) => console.error(err)
