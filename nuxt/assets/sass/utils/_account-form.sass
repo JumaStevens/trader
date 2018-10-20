@@ -1,0 +1,31 @@
+%account-form
+  display: grid
+  grid-gap: $unit*2 0
+  padding: $unit*2
+
+  & .label
+
+  & .input
+    height: $unit*4
+    background: #e8eaed
+    padding: 0 $unit
+
+  & .buttons
+    justify-self: end
+    display: grid
+    grid-gap: $unit*2
+    grid-auto-flow: column
+
+  & .cancel,
+  & .submit
+    width: $unit*15
+    height: $unit*5
+    display: flex
+    justify-content: center
+    align-items: center
+    background: transparent
+
+  & .submit
+    text-align: center
+    background: $success
+    color: $white
