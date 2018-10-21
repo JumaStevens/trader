@@ -1,18 +1,26 @@
 import { Store } from 'vuex'
 
+
 // modules
 import error from './modules/error'
 import app from './modules/app'
 import auth from './modules/auth'
+import coinbase from './modules/coinbase'
+
 
 const createStore = () => {
   return new Store({
     strict: process.env.NODE_ENV !== 'production',
+
+
     modules: {
       error,
       app,
-      auth
+      auth,
+      coinbase
     },
+
+
     actions: {
       async nuxtServerInit({ dispatch }, context) {
         try {
@@ -23,9 +31,11 @@ const createStore = () => {
           throw e
         }
       },
+
       async nuxtClientInit({ state, dispatch }, context) {
         try {
           dispatch('auth/watchAuthState')
+          dispatch('coinbase/feedInit')
           return
         }
         catch(e) {

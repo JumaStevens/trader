@@ -1,5 +1,5 @@
 <template lang='pug'>
-main(class='container-index')
+section(class='container-index')
   div(class='index')
 
     div(class='index__logo')
@@ -10,7 +10,7 @@ main(class='container-index')
     header(class='index__header')
       h1(class='index__header-title') {{ header.title }}
       p(class='index__header-copy') {{ header.copy }}
-        span &nbsp; Coming Soon.
+        span &nbsp;Coming soon.
 
     img(
       src='~/assets/stock_dashboard.png'

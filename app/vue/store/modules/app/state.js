@@ -1,3 +1,3 @@
 export default {
-  navMenuActive: false
+  isNavMenuOpen: false
 }

@@ -41,6 +41,8 @@ module.exports = {
   */
   plugins: [
     { src: '~/plugins/vue-lazyload.js', ssr: false },
+    { src: '~/plugins/global-components.js' },
+    { src: '~/plugins/vue-carousel.js', ssr: false }
   ],
 
   /*
