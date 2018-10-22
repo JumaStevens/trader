@@ -1,10 +1,11 @@
 import webSocketInit from '~/services/webSocketInit'
+import moment from 'moment'
 
 
 export default {
   async feedInit ({ state, commit, dispatch }) {
     try {
-      const { url } = state
+      const { socketUrl: url } = state
       const socket = await webSocketInit({ url })
       commit('SET_SOCKET', { socket })
       dispatch('feedSubscribe')
@@ -70,5 +71,40 @@ export default {
   feedOnError ({ state, dispatch }, { event }) {
     console.log('feedOnError: ', event)
     setTimeout(() => dispatch('feedInit'), 1000 * 15)
+  },
+
+
+  async fetchHistoricRates ({}) {
+    try {
+      const productId = 'ETH-USD'
+      const start = moment().toISOString()
+      const end = moment().add({ days: 1 }).toISOString()
+
+      console.log('start: ', start)
+      console.log('end: ', end)
+
+      const axiosConfig = {
+        headers: {
+          'Access-Control-Allow-Origin' : '*',
+          'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
+        },
+        method: 'get',
+        url: `https://api.pro.coinbase.com/${productId}/candles`,
+        params: {
+          start,
+          end,
+          granularity: '300'
+        }
+      }
+
+      console.log('axiosConfig: ', axiosConfig)
+
+      const res = await this.$axios(axiosConfig)
+      console.log('res: ', res)
+
+    }
+    catch (e) {
+      console.error(e)
+    }
   }
 }

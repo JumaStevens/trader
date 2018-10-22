@@ -37,5 +37,4 @@ export default {
 
 h2
   font-size: $fs1
-  font-weight: bold
 </style>

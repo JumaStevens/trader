@@ -28,6 +28,7 @@ export default {
         { text: 'Dashboard', path: '/dashboard' },
         { text: 'Account', path: '/account' },
         { text: 'News', path: '/news' },
+        { text: 'Chat', path: '/chat' },
         { text: 'Settings', path: '/settings' }
       ]
     }

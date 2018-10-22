@@ -36,6 +36,7 @@ const createStore = () => {
         try {
           dispatch('auth/watchAuthState')
           dispatch('coinbase/feedInit')
+          dispatch('coinbase/fetchHistoricRates')
           return
         }
         catch(e) {
