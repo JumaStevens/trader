@@ -15,6 +15,7 @@ carousel(
     CardTicker(
       :productId='key'
       :price='item'
+      :trend='trend[key]'
       class='ticker-list__card'
     )
 </template>
@@ -23,6 +24,7 @@ carousel(
 <script>
 import { mapGetters } from 'vuex'
 import CardTicker from '@/components/cards/Ticker.vue'
+import { forEach } from 'lodash'
 
 
 export default {
@@ -36,8 +38,17 @@ export default {
     }
   },
   computed: {
+    trend () {
+      const data = this.historicPrice
+      const trend = {}
+      forEach(data, (value, key) => trend[key] = Object.values(value).map(val => Number(val.price || val.close)))
+      return trend
+    },
+
+
     ...mapGetters({
-      currentTickerPrice: 'coinbase/currentTickerPrice'
+      currentTickerPrice: 'coinbase/currentTickerPrice',
+      historicPrice: 'coinbase/historicPrice'
     })
   },
   mounted () {

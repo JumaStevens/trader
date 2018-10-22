@@ -1,6 +1,7 @@
 export default {
+  restEndpoint: 'https://api.pro.coinbase.com',
+  socketEndpoint: 'wss://ws-feed.pro.coinbase.com',
   socket: {},
-  socketUrl: 'wss://ws-feed.pro.coinbase.com',
   productIds: [
     'BTC-USD',
     'BCH-USD',
@@ -15,6 +16,7 @@ export default {
     // 'heartbeat'
   ],
   heartbeat: {},
+  orderBook: {},
   ticker: {},
-  orderBook: {}
+  historicPrice: {}
 }

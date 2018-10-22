@@ -13,5 +13,27 @@ export default {
     })
 
     return currentTickerPrice
+  },
+
+
+  historicPrice (state) {
+    const { historicPrice, ticker } = state
+    const data = {}
+
+    forEach(historicPrice, (value, key) => {
+      data[key] = { ...data[key], ...value }
+    })
+
+    forEach(ticker, (value, key) => {
+      const valueObj = Object.values(value)[0]
+      // ['time', 'low', 'high', 'open', 'close', 'volume']
+      const newTicker = {}
+      newTicker[valueObj.time] = valueObj
+      data[key] = { ...data[key], ...newTicker }
+    })
+
+    console.log('data: ', data)
+
+    return data
   }
 }

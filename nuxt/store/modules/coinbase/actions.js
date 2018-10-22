@@ -1,11 +1,12 @@
-import webSocketInit from '~/services/webSocketInit'
 import moment from 'moment'
+import webSocketInit from '~/services/webSocketInit'
+// import coinbaseClient from '~/services/coinbaseInit'
 
 
 export default {
   async feedInit ({ state, commit, dispatch }) {
     try {
-      const { socketUrl: url } = state
+      const { socketEndpoint: url } = state
       const socket = await webSocketInit({ url })
       commit('SET_SOCKET', { socket })
       dispatch('feedSubscribe')
@@ -51,7 +52,7 @@ export default {
   feedOnMessage ({ commit, dispatch }, { event }) {
     const data = JSON.parse(event.data)
     // console.log('feedOnMessage: ', event)
-    // console.log('feedOnMessage Data: ', data)
+    // console.log('feedOnMessage Data: ', event.data)
 
     if (data.type === 'subscriptions' && data.channels.length === 0) dispatch('feedClose')
 
@@ -74,37 +75,85 @@ export default {
   },
 
 
-  async fetchHistoricRates ({}) {
+  // async coinbaseInit ({ commit }) {
+  //   try {
+  //     const coinbase = await coinbaseClient()
+  //   }
+  //   catch (e) {
+  //     console.error(e)
+  //   }
+  // },
+
+
+
+  async historicRateInit ({ state, dispatch }) {
     try {
-      const productId = 'ETH-USD'
-      const start = moment().toISOString()
-      const end = moment().add({ days: 1 }).toISOString()
-
-      console.log('start: ', start)
-      console.log('end: ', end)
-
-      const axiosConfig = {
-        headers: {
-          'Access-Control-Allow-Origin' : '*',
-          'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
-        },
-        method: 'get',
-        url: `https://api.pro.coinbase.com/${productId}/candles`,
-        params: {
-          start,
-          end,
-          granularity: '300'
-        }
-      }
-
-      console.log('axiosConfig: ', axiosConfig)
-
-      const res = await this.$axios(axiosConfig)
-      console.log('res: ', res)
-
+      const { productIds } = state
+      for (const productId of productIds) await dispatch('historicRateFetch', { productId })
     }
     catch (e) {
       console.error(e)
+    }
+  },
+
+
+  // async historicRateFetch ({ state, commit }, { productId }) {
+  //   try {
+  //     // const productId = 'ETH-USD'
+  //     const url = `${state.restEndpoint}/products/${productId}/candles`
+  //
+  //     const params = {
+  //       start: moment().toISOString(),
+  //       end: moment().add({ days: 1 }).toISOString(),
+  //       granularity: 300 // == 5 minute candles
+  //     }
+  //
+  //     const { data } = await this.$axios({ url, params })
+  //     const itemKeys = ['time', 'low', 'high', 'open', 'close', 'volume']
+  //
+  //     data.forEach(item => {
+  //       const candle = {}
+  //       item.forEach((val, i) => candle[itemKeys[i]] = val)
+  //       commit('SET_HISTORIC_PRICE', { productId, candle })
+  //     })
+  //
+  //     return
+  //   }
+  //   catch (e) {
+  //     console.error(e)
+  //     throw e
+  //   }
+  // }
+
+
+  async historicRateFetch ({ state, commit }, { productId }) {
+    try {
+      // const productId = 'ETH-USD'
+      const url = `${state.restEndpoint}/products/${productId}/candles`
+
+      const params = {
+        start: moment().toISOString(),
+        end: moment().add({ days: 1 }).toISOString(),
+        granularity: 300 // == 5 minute candles
+      }
+
+      const { data } = await this.$axios({ url, params })
+      const itemKeys = ['time', 'low', 'high', 'open', 'close', 'volume']
+      const candles = {}
+
+      data.forEach(item => {
+        const candle = {}
+        item.forEach((val, i) => candle[itemKeys[i]] = val)
+        candles[candle.time] = candle
+      })
+
+      commit('SET_HISTORIC_PRICE', { productId, candles })
+
+      return
+    }
+    catch (e) {
+      console.error(e)
+      throw e
     }
   }
 }

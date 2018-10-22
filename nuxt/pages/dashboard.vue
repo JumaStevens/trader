@@ -2,7 +2,7 @@
 section(class='container-dashboard')
   div(class='dashboard')
 
-    h2 Cryptocurrencies
+    h2 Tickers
     TickerList
 
 </template>

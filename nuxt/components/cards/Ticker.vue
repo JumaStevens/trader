@@ -4,7 +4,7 @@ a(class='card-ticker')
   h3(class='card-ticker__text') {{ productId }}
 
   trend(
-    :data='crypto'
+    :data='trend'
     :gradient='["#21ce99"]'
     smooth
     class='crypto'
@@ -27,16 +27,16 @@ export default {
     price: {
       type: String,
       default: '0.00'
+    },
+    trend: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
     return {}
   },
-  computed: {
-    crypto () {
-      return Object.values(this.$store.state.coinbase.ticker[this.productId]).map(ticker => Number(ticker.price))
-    }
-  },
+  computed: {},
   methods: {}
 }
 </script>
