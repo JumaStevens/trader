@@ -1,3 +1,5 @@
 export default {
-  isNavMenuOpen: false
+  isBrowser: false,
+  isNavMenuOpen: false,
+  activeProductId: ''
 }

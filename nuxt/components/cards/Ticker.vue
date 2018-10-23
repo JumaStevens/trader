@@ -3,22 +3,25 @@ a(class='card-ticker')
 
   h3(class='card-ticker__text') {{ productId }}
 
-  trend(
+  ChartTrendLine(
     :data='trend'
-    :gradient='["#21ce99"]'
+    :gradient='trend[0] < trend[trend.length - 1] ? ["#21ce99"] : ["#f45531"]'
     smooth
-    class='crypto'
+    class='card-ticker__trend'
   )
 
-  span(class='card-ticker__price') {{ Number(price).toFixed(2) }}
+  span(class='card-ticker__price') {{ price }}
 </template>
 
 
 <script>
+import ChartTrendLine from '@/components/charts/TrendLine.vue'
 
 
 export default {
-  components: {},
+  components: {
+    ChartTrendLine
+  },
   props: {
     productId: {
       type: String,
@@ -35,9 +38,7 @@ export default {
   },
   data () {
     return {}
-  },
-  computed: {},
-  methods: {}
+  }
 }
 </script>
 
@@ -51,10 +52,11 @@ export default {
   align-items: center
   padding: 0 $unit*3
   border-radius: $unit/2
+  background: $white
 
   &__text
     white-space: nowrap
 
-.crypto
-  stroke-width: 4px
+  &__trend
+    stroke-width: 4px
 </style>

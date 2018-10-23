@@ -10,6 +10,7 @@ main(class='vue-app')
 import AppNavigationBar from '@/components/app/NavigationBar.vue'
 import AppNavigationMenu from '@/components/app/NavigationMenu.vue'
 
+
 export default {
   name: 'vueApp',
   components: {
@@ -25,7 +26,7 @@ export default {
 
 <style lang='sass'>
 .vue-app
-  background: $grey
+  background: #FAFAFA
   min-height: 100vh
   display: grid
   grid-template-rows: auto 1fr
@@ -50,7 +51,6 @@ export default {
 
 
   &__view
-    background: $white
     height: calc(100vh - #{$unit*6})
     grid-row: 2 / 3
     grid-column: 1 / 3

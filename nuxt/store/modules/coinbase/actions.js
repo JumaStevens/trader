@@ -1,6 +1,9 @@
 import moment from 'moment'
 import webSocketInit from '~/services/webSocketInit'
 // import coinbaseClient from '~/services/coinbaseInit'
+import convertKeysToCamelCase from '~/utils/convertKeysToCamelCase'
+import setTimeoutPromise from '~/utils/setTimeoutPromise'
+import { forEach } from 'lodash'
 
 
 export default {
@@ -49,8 +52,16 @@ export default {
   },
 
 
+  feedTicker ({ state, commit }, { data }) {
+    const tickerData = {}
+    forEach(data, (value, key) => tickerData[key] = Number(value) || value)
+    tickerData.time = moment(tickerData.time).unix()
+    commit('SET_TICKER', { data: tickerData })
+  },
+
+
   feedOnMessage ({ commit, dispatch }, { event }) {
-    const data = JSON.parse(event.data)
+    const data = convertKeysToCamelCase(JSON.parse(event.data))
     // console.log('feedOnMessage: ', event)
     // console.log('feedOnMessage Data: ', event.data)
 
@@ -58,7 +69,7 @@ export default {
 
     if (data.type === 'heartbeat') commit('SET_HEARTBEAT', { data })
 
-    if (data.type === 'ticker') commit('SET_TICKER', { data })
+    if (data.type === 'ticker' && data.time) dispatch('feedTicker', { data })
 
     // if (data.type === 'l2update') commit('SET_ORDER_BOOK', { data })
   },
@@ -97,49 +108,22 @@ export default {
   },
 
 
-  // async historicRateFetch ({ state, commit }, { productId }) {
-  //   try {
-  //     // const productId = 'ETH-USD'
-  //     const url = `${state.restEndpoint}/products/${productId}/candles`
-  //
-  //     const params = {
-  //       start: moment().toISOString(),
-  //       end: moment().add({ days: 1 }).toISOString(),
-  //       granularity: 300 // == 5 minute candles
-  //     }
-  //
-  //     const { data } = await this.$axios({ url, params })
-  //     const itemKeys = ['time', 'low', 'high', 'open', 'close', 'volume']
-  //
-  //     data.forEach(item => {
-  //       const candle = {}
-  //       item.forEach((val, i) => candle[itemKeys[i]] = val)
-  //       commit('SET_HISTORIC_PRICE', { productId, candle })
-  //     })
-  //
-  //     return
-  //   }
-  //   catch (e) {
-  //     console.error(e)
-  //     throw e
-  //   }
-  // }
-
-
   async historicRateFetch ({ state, commit }, { productId }) {
     try {
-      // const productId = 'ETH-USD'
       const url = `${state.restEndpoint}/products/${productId}/candles`
-
       const params = {
         start: moment().toISOString(),
         end: moment().add({ days: 1 }).toISOString(),
         granularity: 300 // == 5 minute candles
       }
 
+      // delay request to avoid API status 429 (API rate limit: 3/sec)
+      await setTimeoutPromise(333)
       const { data } = await this.$axios({ url, params })
-      const itemKeys = ['time', 'low', 'high', 'open', 'close', 'volume']
+
+      // convert to object, assign keys
       const candles = {}
+      const itemKeys = ['time', 'low', 'high', 'open', 'close', 'volume']
 
       data.forEach(item => {
         const candle = {}
@@ -147,8 +131,7 @@ export default {
         candles[candle.time] = candle
       })
 
-      commit('SET_HISTORIC_PRICE', { productId, candles })
-
+      commit('SET_HISTORIC_RATE', { productId, candles })
       return
     }
     catch (e) {

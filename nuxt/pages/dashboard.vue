@@ -4,12 +4,14 @@ section(class='container-dashboard')
 
     h2 Tickers
     TickerList
+    PriceHistory
 
 </template>
 
 
 <script>
 import TickerList from '@/components/modules/TickerList.vue'
+import PriceHistory from '@/components/modules/PriceHistory.vue'
 
 
 export default {
@@ -19,7 +21,8 @@ export default {
     return
   },
   components: {
-    TickerList
+    TickerList,
+    PriceHistory
   },
   data () {
     return {}

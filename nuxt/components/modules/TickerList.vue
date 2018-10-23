@@ -13,16 +13,18 @@ carousel(
     class='ticker-list__item'
   )
     CardTicker(
+      @click.native='SET_ACTIVE_PRODUCT_ID({ productId: key })'
       :productId='key'
       :price='item'
       :trend='trend[key]'
+      :class='{ active: key === activeProductId }'
       class='ticker-list__card'
     )
 </template>
 
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import CardTicker from '@/components/cards/Ticker.vue'
 import { forEach } from 'lodash'
 
@@ -46,6 +48,11 @@ export default {
     },
 
 
+    ...mapState({
+      activeProductId: state => state.app.activeProductId
+    }),
+
+
     ...mapGetters({
       currentTickerPrice: 'coinbase/currentTickerPrice',
       historicPrice: 'coinbase/historicPrice'
@@ -54,7 +61,11 @@ export default {
   mounted () {
     this.isBrowser = true
   },
-  methods: {}
+  methods: {
+    ...mapMutations({
+      SET_ACTIVE_PRODUCT_ID: 'app/SET_ACTIVE_PRODUCT_ID'
+    })
+  }
 }
 </script>
 <style lang='sass'>
@@ -73,5 +84,7 @@ export default {
 
   &__card
     width: 280px
-    box-shadow: 0 0 $unit*3 rgba(34, 34, 34, 0.05)
+
+    &.active
+      box-shadow: 0 0 $unit*3 rgba(34, 34, 34, 0.05)
 </style>

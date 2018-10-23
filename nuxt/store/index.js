@@ -32,8 +32,9 @@ const createStore = () => {
         }
       },
 
-      async nuxtClientInit({ state, dispatch }, context) {
+      async nuxtClientInit({ state, commit, dispatch }, context) {
         try {
+          commit('app/SET_IS_BROWSER')
           dispatch('auth/watchAuthState')
           dispatch('coinbase/feedInit')
           dispatch('coinbase/historicRateInit')

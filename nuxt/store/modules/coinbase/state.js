@@ -18,5 +18,5 @@ export default {
   heartbeat: {},
   orderBook: {},
   ticker: {},
-  historicPrice: {}
+  historicRate: {}
 }
